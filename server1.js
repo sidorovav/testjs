@@ -9,7 +9,7 @@ var ts_hms = Date.now();
 //var out = "Time now " + dateFormat(ts_hms, "isoDateTime")  //.format("%Y-%m-%d %H:%M:%S")
 function accept(req, res) {
   res.writeHead(200, {
-    'Content-Type': 'text/plain; charset=utf-8',
+    'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-cache'
   });
   var route = url.parse(req.url).path
@@ -17,7 +17,7 @@ function accept(req, res) {
     case "/time": res.end("Time now " + dateFormat(ts_hms, "mediumTime"));
       break
     default:
-      res.end("Привет Andrey")
+      res.end("Привет Андрей! Смотри "+ "<a href='/time'>Время</a>")
   }
 
   console.log(url.parse(req.url).path)
