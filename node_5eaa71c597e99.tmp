@@ -18,7 +18,7 @@ function accept(req, res) {
 
   console.log(out)
   res.end(out);
-  //res.end(out+"---"+req);
+  res.end(out+"---"+req);
   //res.end(req.toString())
 }
 
