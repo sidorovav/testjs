@@ -19,13 +19,13 @@ function accept(req, res) {
     default:
       res.end("Привет Андрей! Смотри " + "<a href='/time'>Время</a>")
   }
-  function t1(res){
-    console.log("dzin");
-    res.end("Time now " + dateFormat(Date.now(), "mediumTime"))
-  }
+  
 }
 
-
+function t1(res){
+  console.log("dzin");
+  res.end("Time now " + dateFormat(Date.now(), "mediumTime"))
+}
 http.createServer(accept).listen(8080);
 console.log("http://127.0.0.1:8080")
 //F8 run F9 stop
