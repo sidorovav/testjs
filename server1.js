@@ -12,17 +12,27 @@ function accept(req, res) {
   console.log(route)
   switch (route) {
     case "/time":
+      /*
       var timerId = setTimeout(t1,1000,res);
-      res.write("Ждите ...");
       
+      */
+      res.write("Ждите ..."); // был write
+      setTimeout(function () {
+        res.end(mytime())
+      }, 1000);
+
       break
     default:
       res.end("Привет Андрей! Смотри " + "<a href='/time'>Время</a>")
   }
-  
+
 }
 
-function t1(res){
+function mytime()
+{
+  return "Time now " + dateFormat(Date.now(), "mediumTime");
+}
+function t1(res) {
   console.log("dzin");
   res.end("Time now " + dateFormat(Date.now(), "mediumTime"))
 }
