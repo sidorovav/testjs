@@ -8,3 +8,6 @@
  * VS Live Share - для парного программирования
  * Markdown All in One - для разметки этого файла
 
+Что почитать
+[Современный учебник Javascript](https://learn.javascript.ru/write-unmain-code?map)
+
