@@ -1,19 +1,6 @@
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./DB/db1.db');
 // http://www.sqlitetutorial.net/sqlite-nodejs/query/ 
-
-function prepareDB(db){
-    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)");
-    
-    productGetCount(db,function(data){
-        if (data == 0) {
-          //  productInitData(db)
-          console.log("пусто")
-        } else {console.log("есть данные")}
-    })
-    
-  // productInitData(db)
-}
 function productInitData(db){
     var testproduct ={id:1,product:{name:"сыр",description:"молочный"}};
     var stmt = db.prepare("INSERT INTO products (product) VALUES (?)");
@@ -47,6 +34,22 @@ function productGetById(db,id,callback){
         callback(data); 
     });
 }
+function prepareDB(db){
+    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)", function(){
+        productGetCount(db,function(data){
+            if (data == undefined) {
+              console.log("пусто");
+              productInitData(db);
+            } 
+            else 
+            {console.log("есть данные")}
+        })
+    });
+    
+    
+  // productInitData(db)
+}
+
 function showData(db){
     db.each("SELECT * FROM products order by id", function(err, row) {
         console.log(row.id + ": " + row.product);
