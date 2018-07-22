@@ -16,16 +16,28 @@ db.serialize(function() {
   });
 });
 */
-var testproduct ={id:1,product:{name:"сыр",description:"молочный"}};
-db.serialize(function() {
+function prepareDB(db){
     db.run ("create table if not exists products (id NUMBER,product JSON)");
-    var stmt = db.prepare("INSERT INTO products VALUES (?,?)");
+    var count = 0;
+    db.each("SELECT count(id) as count FROM products", function(err, row) {count = row.count});
+    if (count >= 0) {
+        var stmt = db.prepare("INSERT INTO products VALUES (?,?)");
         for (var i = 0; i < 10; i++) {
             testproduct.id=i,testproduct.product.name="сыр " + i
             stmt.run(testproduct.id,JSON.stringify(testproduct.product));
         }
         stmt.finalize();
+    }    
+}
+
+var testproduct ={id:1,product:{name:"сыр",description:"молочный"}};
+db.serialize(function() {
+    prepareDB(db);
+    db.each("SELECT * FROM products order by id", function(err, row) {
+        console.log(row.id + ": " + row.product);
+    })
  });
+
 
 console.log(testproduct); 
 db.close();
