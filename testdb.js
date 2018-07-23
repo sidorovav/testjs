@@ -35,20 +35,19 @@ function productGetById(db,id,callback){
     });
 }
 function prepareDB(db){
-    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)", function(){
-        productGetCount(db,function(data){
-            if (data == undefined) {
-              console.log("пусто");
-              productInitData(db);
-            } 
-            else 
-            {console.log("есть данные")}
-        })
-    });
-    
-    
-  // productInitData(db)
-}
+    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)", callbackInit(db));
+    // productInitData(db)
+    };
+function callbackInit(db){
+    productGetCount(db,function(data){
+        if (data ==0 || data == undefined) {
+          console.log("пусто");
+          productInitData(db);
+        } 
+        else 
+        {console.log("есть данные")}
+    })
+};
 
 function showData(db){
     db.each("SELECT * FROM products order by id", function(err, row) {
