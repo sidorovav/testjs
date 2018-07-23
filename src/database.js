@@ -35,12 +35,13 @@ class Product {
                 description: "молочный"
             }
         };
-        const sql='INSERT INTO products (product) VALUES (?)';
+        var stmt = db.prepare('INSERT INTO products (product) VALUES (?)');
         for (var i = 0; i < 10; i++) {
         testproduct.id = i,
-        testproduct.product.name = "сыр " + (i + 1)
-        db.run(sql,JSON.stringify(testproduct.product),cb);
+        testproduct.product.name = "сыр " + (i + 1);
+        stmt.run(JSON.stringify(testproduct.product),cb);
         }
+        stmt.finalize(cb);
     }
 }
 
