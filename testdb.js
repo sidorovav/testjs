@@ -15,29 +15,25 @@ function productGetCount(db,callback){
     var data;
     db.each("SELECT count(id) as count FROM products", function(err, row) {
         data =row.count;
-    }, function(){ // calling function when all rows have been pulled
-       // db.close(); //closing connection
-        callback(data); 
-    });
+        }, function(){callback(data);}
+    );
+}
+function productGetById(db,id,callback){
+    var data;
+    db.each("SELECT product FROM products WHERE id = " + id , function(err, row) {
+        data =row;
+        }, function(){callback(data);}
+    );
 }
 
 function productDel(db,id){
     db.exec("delete FROM products where id = " + id, function(err, row) {
     })
 }
-function productGetById(db,id,callback){
-    var data;
-    db.each("SELECT product FROM products WHERE id = " + id , function(err, row) {
-        data =row;
-    }, function(){ // calling function when all rows have been pulled
-       // db.close(); //closing connection
-        callback(data); 
-    });
-}
 function prepareDB(db){
-    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)", callbackInit(db));
-    // productInitData(db)
-    };
+    db.run ("create table if not exists products (id INTEGER PRIMARY KEY AUTOINCREMENT,product JSON)");
+    //productInitData(db);
+    }
 function callbackInit(db){
     productGetCount(db,function(data){
         if (data ==0 || data == undefined) {
@@ -45,9 +41,9 @@ function callbackInit(db){
           productInitData(db);
         } 
         else 
-        {console.log("есть данные")}
-    })
-};
+        {console.log("есть данные");}
+    });
+}
 
 function showData(db){
     db.each("SELECT * FROM products order by id", function(err, row) {
@@ -56,9 +52,18 @@ function showData(db){
 }
 db.serialize(function() {
     prepareDB(db);
+    //productInitData(db);
+    productGetCount(db,function(data) {
+        if(data == 0) {
+            console.log("нет записей");
+            productInitData(db);
+        }
+        else {console.log("есть записи");};
+    });
     //showData(db);
     //productDel(db,8);
     //showData(db);
-    productGetById(db,5, function(data) {console.log(data)});
+    productGetById(db,5, function(data) {console.log(data);});
+    productGetCount(db,function(data) {console.log(data);});
  });
 db.close();
