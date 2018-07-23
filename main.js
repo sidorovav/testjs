@@ -38,15 +38,20 @@ function accept(req, res) {
             switch (route) {
                 case "/products": //возвращает json со списком продуктов
                     console.log("products");
+                    
                     Products.all((err,products) => {
                         if (err) return next(err);
-                        res.write(products[2]);
-                        res.end("");
+                        //res.write(products[2]);
+                        res.end(products);
                     });
                     //res.end("");
                     break
                 case "/products/123": // - возвращает продукт с id 123
                     console.log("products/123");
+                        res.writeHead(200, {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'Cache-Control': 'no-cache'
+                        }); 
                     Products.find(123,(err,products) => {
                         if (err) return next(err);
                         res.end(products.product);
@@ -58,7 +63,20 @@ function accept(req, res) {
                 "<a href='/products/123'>Продукты 123</a></p>");
             }
         case "DELETE":
-        break
+            switch (route) {
+                case "/products/123": // - удаляем продукт с id 123
+                console.log("products/123");
+                Products.delete(11,(err) => {
+                    if (err) {return err} else {
+                        res.writeHead(200, {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'Cache-Control': 'no-cache'
+                        });
+                        res.end("");
+                    }
+                });
+                break        
+            }
         case "POST":
         break
     }

@@ -11,18 +11,20 @@ const sql = 'create table if not exists ' +
 
 class Product {
     static all(cb) {
-        const prototype='products'
+        const prototype='products';
         db.all('select * from ' +prototype,cb);
     }
     static find(id,cb) {
-        const prototype='products'
+        const prototype='products';
         db.get('select * from ' +prototype + ' WHERE id = ?',id,cb);
     }
     static create(data,cb) {
+        const prototype='products';
         const sql = 'INSERT INTO ' +prototype + '(product) VALUES (?)';
         db.run(sql,JSON.stringify(data),cb);
     }
     static delete(id,cb) {
+        const prototype='products';
         if (!id) return cb(new Error('Введите ID'));
         const sql = 'DELETE FROM ' +prototype + 'WHERE id = ?';
         db.run(sql,id,cb);
