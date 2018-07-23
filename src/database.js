@@ -36,7 +36,7 @@ class Product {
             }
         };
         var stmt = db.prepare('INSERT INTO products (product) VALUES (?)');
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 200; i++) {
         testproduct.id = i,
         testproduct.product.name = "сыр " + (i + 1);
         stmt.run(JSON.stringify(testproduct.product),cb);
