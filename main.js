@@ -44,16 +44,7 @@ function accept(req, res) {
                         }); 
                     Products.all((err,products) => {
                         if (err) return next(err);
-                        //res.end(JSON.parse(products.product));
-                        /*
-                        products.forEach(function(product) {
-                            console.log(product.id);
-                            res.write(JSON.stringify(product));
-                        });
-                        res.end("");
-                        */
                        res.end(JSON.stringify(products));
-                       //res.end("");
                     });
                     break;
                 case "/products/123": // - возвращает продукт с id 123
