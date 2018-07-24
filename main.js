@@ -5,7 +5,7 @@ const url = require('url');
 /*
 Products.all((err,products) => {
     if (err) return next(err);
-    console.log(products[2]);
+    console.log(products);
 });
 
 Products.find(123,(err,products) => {
@@ -44,10 +44,16 @@ function accept(req, res) {
                         }); 
                     Products.all((err,products) => {
                         if (err) return next(err);
-                        //res.write(products[2]);
-                        res.end(products);
+                        //res.end(JSON.parse(products.product));
+                        /*
+                        products.forEach(function(product) {
+                            console.log(product.id);
+                            res.write(JSON.stringify(product));
+                        });
+                        res.end("");
+                        */
+                       res.write(JSON.stringify(products));
                     });
-                    //res.end("");
                     break;
                 case "/products/123": // - возвращает продукт с id 123
                     console.log("products/123");
