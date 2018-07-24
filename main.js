@@ -48,6 +48,9 @@ function accept(req, res) {
     switch (params[0]) {
        case "GET":
             switch (params[1]) {   //продукты и т.п.
+                case "":
+                    sendefault(res);
+                    break;
                 case productRoute:   // продукты
                     switch (params.length) {
                         case 2:
@@ -59,10 +62,8 @@ function accept(req, res) {
                             } else sendefault(res);
                             break;
                         default:
-                        sendefault(res);
+                        //sendefault(res);
                     }
-                case "":
-                    sendefault(res);
                 default:
             }
         break;
