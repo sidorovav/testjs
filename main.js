@@ -52,7 +52,8 @@ function accept(req, res) {
                         });
                         res.end("");
                         */
-                       res.write(JSON.stringify(products));
+                       res.end(JSON.stringify(products));
+                       //res.end("");
                     });
                     break;
                 case "/products/123": // - возвращает продукт с id 123
