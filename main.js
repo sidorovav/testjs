@@ -2,85 +2,71 @@ const Products = require('./src/database').Product;
 const http = require('http');
 const url = require('url');
 //Products.initExampleData((err) => {console.log("Заполнили данные")});
-/*
-Products.all((err,products) => {
-    if (err) return next(err);
-    console.log(products);
-});
 
-Products.find(123,(err,products) => {
-    if (err) return next(err);
-    console.log(products.product);
-})
-сделать простой API сервер
-GET /products - возвращает json со списком продуктов
-GET /products/123 - возвращает продукт с id 123
-DELETE /products/123 удаляет
-POST /products - создает новый из данных в теле поста
-как сам продукт выглядит пока не важно
+const productRoute ="products";
+function sendefault(res){
+    res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache'
+      });
+    res.end("Готов </p>" + 
+    "<a href='/" + productRoute + "'>Продукты</a></p>" + 
+    "<a href='/" + productRoute + "/123'>Продукты 123</a></p>");
+}
+function sendAllProducts(res){
+    console.log("get/products");
+    res.writeHead(200, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-cache'
+        }); 
+    Products.all((err,products) => {
+        if (err) return next(err);
+       res.end(JSON.stringify(products));
+    });
+}
+function sendProduct(res,id) {
+    console.log("get/products/" + id);
+    res.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-cache'
+    }); 
+    Products.find(id,(err,products) => {
+        if (err) return next(err);
+        res.end(products.product);
+    });
+}
 
-допустим id, name, description
-попробуй для первой версии никакие сторонние модули не использовать
-только клиент sqlite
-*/
+//===========================================================
 
 function accept(req, res) {
     res.writeHead(200, {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-cache'
     });
-    var route = url.parse(req.url).path;
-
-    console.log(req.method);
-    console.log(route);
-    switch (req.method) {
-        case "GET":
-            switch (route) {
-                case "/products": //возвращает json со списком продуктов
-                    console.log("products");
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'Cache-Control': 'no-cache'
-                        }); 
-                    Products.all((err,products) => {
-                        if (err) return next(err);
-                       res.end(JSON.stringify(products));
-                    });
-                    break;
-                case "/products/123": // - возвращает продукт с id 123
-                    console.log("products/123");
-                        res.writeHead(200, {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'Cache-Control': 'no-cache'
-                        }); 
-                    Products.find(123,(err,products) => {
-                        if (err) return next(err);
-                        res.end(products.product);
-                    });
-                    break;
-                default:
-                res.end("Готов </p>" + 
-                "<a href='/products'>Продукты</a></p>" + 
-                "<a href='/products/123'>Продукты 123</a></p>");
-            }
-        case "DELETE":
-            switch (route) {
-                case "/products/123": // - удаляем продукт с id 123
-                console.log("products/123");
-                Products.delete(11,(err) => {
-                    if (err) {return err} else {
-                        res.writeHead(200, {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'Cache-Control': 'no-cache'
-                        });
-                        res.end("");
+    var route = req.method+url.parse(req.url).path;
+    var params = route.split("/");
+    switch (params[0]) {
+       case "GET":
+            switch (params[1]) {   //продукты и т.п.
+                case productRoute:   // продукты
+                    switch (params.length) {
+                        case 2:
+                            sendAllProducts(res);
+                            break;
+                        case 3:
+                            if ((params[2] > 0 ) && (params[2] < 200)) {
+                                   sendProduct(res,params[2]);
+                            } else sendefault(res);
+                            break;
+                        default:
+                        sendefault(res);
                     }
-                });
-                break;        
+                case "":
+                    sendefault(res);
+                default:
             }
-            break;
-        case "POST":
         break;
+        default:
     }
   }
   
