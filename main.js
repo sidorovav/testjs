@@ -34,11 +34,12 @@ function sendAllProducts(res){
     });
 }
 function sendProduct(res,id) {
+    
     console.log("get/products/" + id);
     jsonOK(res);
     Products.find(id,(err,products) => {
         if (err) return next(err);
-        res.end(products.product);
+        if ( typeof products.product !== 'undefined') res.end(products.product);
     });
 }
 
