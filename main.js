@@ -2,7 +2,18 @@ const Products = require('./src/database').Product;
 const http = require('http');
 const url = require('url');
 //Products.initExampleData((err) => {console.log("Заполнили данные")});
-
+function htmlOK(res){
+    res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache'
+      });
+}
+function jsonOK(res){
+    res.writeHead(200, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-cache'
+        }); 
+}
 const productRoute ="products";
 function sendefault(res){
     res.writeHead(200, {
@@ -15,10 +26,7 @@ function sendefault(res){
 }
 function sendAllProducts(res){
     console.log("get/products");
-    res.writeHead(200, {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'no-cache'
-        }); 
+    jsonOK(res);
     Products.all((err,products) => {
         if (err) return next(err);
        res.end(JSON.stringify(products));
@@ -26,10 +34,7 @@ function sendAllProducts(res){
 }
 function sendProduct(res,id) {
     console.log("get/products/" + id);
-    res.writeHead(200, {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-cache'
-    }); 
+    jsonOK(res);
     Products.find(id,(err,products) => {
         if (err) return next(err);
         res.end(products.product);
@@ -39,10 +44,7 @@ function sendProduct(res,id) {
 //===========================================================
 
 function accept(req, res) {
-    res.writeHead(200, {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-cache'
-    });
+    htmlOK(res);
     var route = req.method+url.parse(req.url).path;
     var params = route.split("/");
     switch (params[0]) {
@@ -66,12 +68,17 @@ function accept(req, res) {
                     }
                 default:
             }
+            break;
+        case "DELETE":
+            jsonOK(res);
+            res.end("OK");
+            console.log("delete");
         break;
         default:
     }
   }
   
   http.createServer(accept).listen(8080);
-  console.log("http://127.0.0.1:8080")
+  console.log("http://127.0.0.1:8080");
   
   
