@@ -26,7 +26,7 @@ class Product {
     static delete(id,cb) {
         const prototype='products';
         if (!id) return cb(new Error('Введите ID'));
-        const sql = 'DELETE FROM ' +prototype + 'WHERE id = ?';
+        const sql = 'DELETE FROM ' +prototype + ' WHERE id = ?';
         db.run(sql,id,cb);
     }
     static initExampleData(cb){

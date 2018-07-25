@@ -1,6 +1,7 @@
 const Products = require('./src/database').Product;
 const http = require('http');
 const url = require('url');
+const maxProducts =200;
 //Products.initExampleData((err) => {console.log("Заполнили данные")});
 function htmlOK(res){
     res.writeHead(200, {
@@ -41,6 +42,13 @@ function sendProduct(res,id) {
     });
 }
 
+function deleteProduct(res,id) {
+    console.log("delete/products/" + id);
+    jsonOK(res);
+    Products.delete(id,(err,products) => {
+        res.end(JSON.stringify("OK"));
+    });
+}
 //===========================================================
 
 function accept(req, res) {
@@ -59,7 +67,7 @@ function accept(req, res) {
                             sendAllProducts(res);
                             break;
                         case 3:
-                            if ((params[2] > 0 ) && (params[2] < 200)) {
+                            if ((params[2] > 0 ) && (params[2] < maxProducts)) {
                                    sendProduct(res,params[2]);
                             } else sendefault(res);
                             break;
@@ -70,9 +78,24 @@ function accept(req, res) {
             }
             break;
         case "DELETE":
-            jsonOK(res);
-            res.end("OK");
-            console.log("delete");
+            //jsonOK(res);res.end(JSON.stringify("OK"));console.log("delete");
+            switch (params[1]) {   //продукты и т.п.
+                case productRoute:   // продукты
+                    switch (params.length) {
+                        case 2:
+                            //удалить все продукты здесь
+                            break;
+                        case 3:
+                            if ((params[2] > 0 ) && (params[2] < maxProducts)) {
+                                   deleteProduct(res,params[2]);
+                            } else sendefault(res);
+                            break;
+                        default:
+                        //sendefault(res);
+                    }
+                break;
+                default:
+            }
         break;
         default:
     }
